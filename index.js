@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 
 const app = express();
@@ -39,8 +39,30 @@ async function run() {
     })
 
     app.get('/allToy', async (req,res)=>{
-      const allToy = await toysCollection.find({}).toArray()
+      const limit = parseInt(req.query.limit) || 20;
+      const allToy = await toysCollection.find({}).limit(limit).toArray()
       res.send(allToy)
+    })
+    app.get('/toyDetails/:id', async (req,res)=>{
+      console.log(req.params.id);
+      const toy = await toysCollection.findOne({
+        _id: new ObjectId(req.params.id)
+      })
+      res.send(toy)
+    })
+    app.get('/myToys/:email', async (req, res)=>{
+      console.log(req.params.email);
+      const myToys = await toysCollection.find({
+        sellerMail:req.params.email,
+      }).toArray()
+      res.send(myToys)
+    })
+    app.get('/toysBySubCategory/:subCat', async (req,res)=>{
+      console.log(req.params.subCat)
+    const subCategoryToys = await toysCollection.find({
+      subCategory: req.params.subCat
+    }).toArray();
+    res.send(subCategoryToys);
     })
 
     // Send a ping to confirm a successful connection
