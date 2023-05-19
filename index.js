@@ -36,6 +36,7 @@ async function run() {
       const result = await toysCollection.insertOne(body);
       res.send(result);
     });
+
     //all get api
 
     //1.'/allToy' for load all data from this collection
@@ -52,7 +53,7 @@ async function run() {
       });
       res.send(toy);
     });
-//3.'/toyDetails/:id' for load a toy data from this collection by id
+//3.'/toyDetails/:id' for edit a toy data from this collection by id
     app.put("/toyDetails/:id", async (req, res) => {
       const id = req.params.id;
       const updateToy = req.body;
@@ -81,7 +82,7 @@ async function run() {
       res.send(result);
     });
 
-    //2.'/myToys/:email' for load all data from this collection by a user
+    //3.'/myToys/:email' for load all data from this collection by a user
     app.get("/myToys/:email", async (req, res) => {
       const myToys = await toysCollection
         .find({
