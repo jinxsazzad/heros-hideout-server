@@ -64,7 +64,7 @@ async function run() {
       res.send(myToys);
     });
 
-    //2.'/toysBySubCategory/:subCat' for load all data from this collection by a sub-category
+    //4.'/toysBySubCategory/:subCat' for load all data from this collection by a sub-category
     app.get("/toysBySubCategory/:subCat", async (req, res) => {
       const subCategoryToys = await toysCollection
         .find({
@@ -73,8 +73,10 @@ async function run() {
         .toArray();
       res.send(subCategoryToys);
     });
-    
-//3.'/toyDetails/:id' for edit a toy data from this collection by id
+
+    // all put and fetch api
+
+    //1.'/toyDetails/:id' for edit a toy data from this collection by id
     app.put("/toyDetails/:id", async (req, res) => {
       const id = req.params.id;
       const updateToy = req.body;
@@ -95,16 +97,13 @@ async function run() {
       const result = await toysCollection.updateOne(filter, updateDoc);
       res.send(result);
     });
-
+    // all delete api
     app.delete("/toyDetails/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await toysCollection.deleteOne(query);
       res.send(result);
     });
-
-    
-
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
