@@ -33,7 +33,6 @@ async function run() {
     //all post api
     app.post("/addAToy", async (req, res) => {
       const body = req.body;
-      console.log(body);
       const result = await toysCollection.insertOne(body);
       res.send(result);
     });
@@ -48,20 +47,28 @@ async function run() {
 
     //2.'/toyDetails/:id' for load a toy data from this collection by id
     app.get("/toyDetails/:id", async (req, res) => {
-      console.log(req.params.id);
       const toy = await toysCollection.findOne({
         _id: new ObjectId(req.params.id),
       });
       res.send(toy);
     });
-
-    app.patch("/toyDetails/:id", async (req, res) => {
+//3.'/toyDetails/:id' for load a toy data from this collection by id
+    app.put("/toyDetails/:id", async (req, res) => {
       const id = req.params.id;
-      const filter = { _id: new ObjectId(id) };
       const updateToy = req.body;
-      console.log(updateToy);
+      const filter = { _id: new ObjectId(id) };
       const updateDoc = {
-        $set: {},
+        $set: {
+          description: updateToy.description,
+          name: updateToy.name,
+          pictureUrl: updateToy.pictureUrl,
+          price: updateToy.price,
+          quantity: updateToy.quantity,
+          rating: updateToy.rating,
+          sellerMail: updateToy.sellerMail,
+          sellerName: updateToy.sellerName,
+          subCategory: updateToy.subCategory,
+        },
       };
       const result = await toysCollection.updateOne(filter, updateDoc);
       res.send(result);
@@ -76,7 +83,6 @@ async function run() {
 
     //2.'/myToys/:email' for load all data from this collection by a user
     app.get("/myToys/:email", async (req, res) => {
-      console.log(req.params.email);
       const myToys = await toysCollection
         .find({
           sellerMail: req.params.email,
@@ -87,7 +93,6 @@ async function run() {
 
     //2.'/toysBySubCategory/:subCat' for load all data from this collection by a sub-category
     app.get("/toysBySubCategory/:subCat", async (req, res) => {
-      console.log(req.params.subCat);
       const subCategoryToys = await toysCollection
         .find({
           subCategory: req.params.subCat,
@@ -95,6 +100,7 @@ async function run() {
         .toArray();
       res.send(subCategoryToys);
     });
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -110,7 +116,7 @@ app.get("/", (req, res) => {
   res.send(`
   <h1 style="text-align:center; margin-top:5rem">
       It's a Backed Server of 
-      <b style="color:red;padding:2rem">Indian Tadka</b> Site !
+      <b style="color:red;padding:2rem">Heros Hideout</b> Site !
       <br/><br/>
       Site Port : <b style="color:red"> ${port} </b>
   </h1>`);
