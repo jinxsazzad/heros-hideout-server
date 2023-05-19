@@ -53,6 +53,27 @@ async function run() {
       });
       res.send(toy);
     });
+
+    //3.'/myToys/:email' for load all data from this collection by a user
+    app.get("/myToys/:email", async (req, res) => {
+      const myToys = await toysCollection
+        .find({
+          sellerMail: req.params.email,
+        })
+        .toArray();
+      res.send(myToys);
+    });
+
+    //2.'/toysBySubCategory/:subCat' for load all data from this collection by a sub-category
+    app.get("/toysBySubCategory/:subCat", async (req, res) => {
+      const subCategoryToys = await toysCollection
+        .find({
+          subCategory: req.params.subCat,
+        })
+        .toArray();
+      res.send(subCategoryToys);
+    });
+    
 //3.'/toyDetails/:id' for edit a toy data from this collection by id
     app.put("/toyDetails/:id", async (req, res) => {
       const id = req.params.id;
@@ -82,25 +103,7 @@ async function run() {
       res.send(result);
     });
 
-    //3.'/myToys/:email' for load all data from this collection by a user
-    app.get("/myToys/:email", async (req, res) => {
-      const myToys = await toysCollection
-        .find({
-          sellerMail: req.params.email,
-        })
-        .toArray();
-      res.send(myToys);
-    });
-
-    //2.'/toysBySubCategory/:subCat' for load all data from this collection by a sub-category
-    app.get("/toysBySubCategory/:subCat", async (req, res) => {
-      const subCategoryToys = await toysCollection
-        .find({
-          subCategory: req.params.subCat,
-        })
-        .toArray();
-      res.send(subCategoryToys);
-    });
+    
 
 
     // Send a ping to confirm a successful connection
